@@ -122,7 +122,7 @@ export default async function AttendancePage({
   params: Promise<{ id: string }>
   searchParams: Promise<{ page?: string; search?: string; status?: string; date_from?: string; date_to?: string; teacher_id?: string; class_id?: string; subject_id?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

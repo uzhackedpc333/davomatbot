@@ -43,7 +43,7 @@ function verifyInitData(initData: string): { valid: boolean; user?: any } {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   try {
     const body = await request.json()

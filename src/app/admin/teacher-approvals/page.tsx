@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/utils/cn'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function getPendingApprovals(supabase: any, schoolId?: string, searchParams: { page?: string; search?: string } = {}) {
   const page = parseInt(searchParams.page || '1')
   const limit = 15
@@ -50,7 +53,7 @@ export default async function TeacherApprovalsPage({
 }: {
   searchParams: Promise<{ page?: string; search?: string; school_id?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

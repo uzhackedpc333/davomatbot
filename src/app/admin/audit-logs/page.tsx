@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -97,7 +99,7 @@ export default async function AuditLogsPage({
   params: Promise<{ id?: string }>
   searchParams: Promise<{ page?: string; action?: string; entity_type?: string; actor_id?: string; date_from?: string; date_to?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -181,7 +183,7 @@ export default async function AuditLogsPage({
               className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Barcha ob'ekt turlari</option>
-              {entityTypes.map((type: string) => (
+              {(entityTypes as string[]).map((type: string) => (
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
@@ -192,7 +194,7 @@ export default async function AuditLogsPage({
               className="w-full sm:w-56 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Barcha harakatlar</option>
-              {actions.map((action: string) => (
+              {(actions as string[]).map((action: string) => (
                 <option key={action} value={action}>{action}</option>
               ))}
             </select>

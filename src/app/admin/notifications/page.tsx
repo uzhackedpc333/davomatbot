@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/utils/cn'
@@ -69,7 +70,7 @@ export default async function NotificationsPage({
   params: Promise<{ id?: string }>
   searchParams: Promise<{ page?: string; type?: string; delivery_status?: string; is_read?: string; date_from?: string; date_to?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

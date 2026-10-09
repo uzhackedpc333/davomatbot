@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/utils/cn'
+import * as XLSX from 'xlsx'
 
 async function getAcademicYears(supabase: any, schoolId: string) {
   const { data } = await supabase
@@ -21,7 +22,7 @@ export default async function ScheduleImportPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -126,8 +127,8 @@ export default async function ScheduleImportPage({
                 required
                 className="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {academicYears.map((year: string) => (
-                  <option key={year} value={year} defaultValue={year === defaultYear}>
+                {(academicYears as string[]).map((year: string) => (
+                  <option key={year} value={year} selected={year === defaultYear}>
                     {year}
                   </option>
                 ))}

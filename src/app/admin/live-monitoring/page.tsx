@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/utils/cn'
@@ -65,10 +66,10 @@ async function getTodaysLessons(supabase: any, schoolId: string) {
 
     // Determine overall lesson status
     let overallStatus = 'PENDING'
-    if (teacherStatuses.some(t => t.status === 'LATE')) overallStatus = 'LATE'
-    else if (teacherStatuses.every(t => t.status === 'PRESENT')) overallStatus = 'PRESENT'
-    else if (teacherStatuses.every(t => t.status === 'MISSING')) overallStatus = 'MISSING'
-    else if (teacherStatuses.some(t => t.status === 'MISSING')) overallStatus = 'MISSING'
+    if (teacherStatuses.some((t: any) => t.status === 'LATE')) overallStatus = 'LATE'
+    else if (teacherStatuses.every((t: any) => t.status === 'PRESENT')) overallStatus = 'PRESENT'
+    else if (teacherStatuses.every((t: any) => t.status === 'MISSING')) overallStatus = 'MISSING'
+    else if (teacherStatuses.some((t: any) => t.status === 'MISSING')) overallStatus = 'MISSING'
 
     return {
       ...lesson,
@@ -83,7 +84,7 @@ export default async function LiveMonitoringPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

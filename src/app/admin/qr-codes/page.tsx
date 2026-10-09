@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/utils/cn'
 import QRCode from 'qrcode'
+import React from 'react'
 
 async function getQRCodes(supabase: any, schoolId: string) {
   const { data, error } = await supabase
@@ -41,7 +42,7 @@ export default async function QRCodesPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

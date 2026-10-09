@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -52,19 +52,29 @@ export async function POST(request: NextRequest) {
     // Check for teacher overlap
     if (teacher_membership_ids && teacher_membership_ids.length > 0) {
       for (const tmId of teacher_membership_ids) {
-        const { data: overlap } = await supabase
-          .from('lessons')
-          .select('id')
-          .eq('school_id', school_id)
-          .eq('academic_year', academic_year)
-          .eq('weekday', weekday)
-          .eq('status', 'SCHEDULED')
-          .lt('start_time', end_time)
-          .gt('end_time', start_time)
-          .in('id', supabase.from('lesson_teachers').select('lesson_id').eq('school_membership_id', tmId))
+        // Get lesson IDs for this teacher
+        const { data: teacherLessons } = await supabase
+          .from('lesson_teachers')
+          .select('lesson_id')
+          .eq('school_membership_id', tmId)
 
-        if (overlap && overlap.length > 0) {
-          return NextResponse.json({ error: 'Ustozda bu vaqtda boshqa dars bor' }, { status: 400 })
+        const teacherLessonIds = teacherLessons?.map((l: any) => l.lesson_id) || []
+
+        if (teacherLessonIds.length > 0) {
+          const { data: overlap } = await supabase
+            .from('lessons')
+            .select('id')
+            .eq('school_id', school_id)
+            .eq('academic_year', academic_year)
+            .eq('weekday', weekday)
+            .eq('status', 'SCHEDULED')
+            .lt('start_time', end_time)
+            .gt('end_time', start_time)
+            .in('id', teacherLessonIds)
+
+          if (overlap && overlap.length > 0) {
+            return NextResponse.json({ error: 'Ustozda bu vaqtda boshqa dars bor' }, { status: 400 })
+          }
         }
       }
     }

@@ -99,7 +99,7 @@ export default async function SecurityPage({
   params: Promise<{ id: string }>
   searchParams: Promise<{ page?: string; event_type?: string; severity?: string; date_from?: string; date_to?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

@@ -44,7 +44,7 @@ export default async function SchoolsPage({
 }: {
   searchParams: Promise<{ page?: string; search?: string; status?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

@@ -44,7 +44,7 @@ export default async function AdminDashboardPage({
 }: {
   searchParams: Promise<{ school_id?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

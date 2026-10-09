@@ -59,7 +59,7 @@ export default async function SchedulePage({
   params: Promise<{ id: string }>
   searchParams: Promise<{ academic_year?: string; view?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -146,7 +146,7 @@ export default async function SchedulePage({
                 }}
                 className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {academicYears.map((year: string) => (
+                {(academicYears as string[]).map((year: string) => (
                   <option key={year} value={year}>{year}</option>
                 ))}
               </select>

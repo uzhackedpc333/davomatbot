@@ -106,7 +106,7 @@ export default async function DocumentsPage({
   params: Promise<{ id: string }>
   searchParams: Promise<{ page?: string; category?: string; document_type?: string; status?: string; date_from?: string; date_to?: string }>
 }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

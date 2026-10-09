@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const supabase = createClient()
+  const supabase = await createClient()
 
   try {
     // Handle different update types
@@ -119,8 +119,8 @@ async function sendStartMessage(chatId: number, tgAccount: any, supabase: any) {
       .select('*, schools(*)')
       .eq('profile_id', tgAccount.profile_id)
 
-    const approvedMemberships = memberships?.filter(m => m.status === 'APPROVED') || []
-    const pendingMemberships = memberships?.filter(m => m.status === 'PENDING') || []
+    const approvedMemberships = (memberships as any[])?.filter(m => m.status === 'APPROVED') || []
+    const pendingMemberships = (memberships as any[])?.filter(m => m.status === 'PENDING') || []
 
     if (approvedMemberships.length > 0) {
       message += '✅ Siz tasdiqlangan maktablarda:\n'
